@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import Cartao from './Cartao'
 
 export default class Busca extends Component {
 
@@ -6,8 +7,7 @@ export default class Busca extends Component {
         super(props)
         this.state = {
             textoEntrada: '',
-            textoResultado: '',
-            textoArea: '',
+            dados: [],
         }
         this.buscar = this.buscar.bind(this)
         this.atualizarTexto = this.atualizarTexto.bind(this)
@@ -23,16 +23,14 @@ export default class Busca extends Component {
     console.log(url)
     fetch(url)
     .then( (resultado) => {
+        console.log(resultado)
         return resultado.json()
     })
     .then( (resultado) => {
-        let textoResult = 'Nome: ' + resultado.nome
-        let textoAreaResult = 'Área: ' + resultado.area
-        console.log(textoResult)
-        this.setState({textoResultado: textoResult, textoArea: textoAreaResult})
+        this.setState({dados: resultado})      
     })
     .catch( (error) => {
-        this.setState({textoResultado: 'Valor não encontrado'})
+        this.setState({dados: 'Valor não encontrado'})
     })
     }
 
@@ -41,10 +39,13 @@ export default class Busca extends Component {
             <div>
                 <h2>Busca rápida de Profs</h2>
                 <h3>Informe o código:</h3>
-                <input type='text' placeholder='0 - 3' onChange={this.atualizarTexto} />
+                <input type='text' placeholder='Termo' onChange={this.atualizarTexto} />
                 <input type='button' onClick={this.buscar} value='Buscar' />
-                <h4>{this.state.textoResultado}</h4>
-                <h4>{this.state.textoArea}</h4>
+                {
+                    this.state.dados.map( (item) => {
+                        return ( <Cartao nome={item.nome} area={item.area} /> )
+                    })
+                }
             </div>
         )
     }
