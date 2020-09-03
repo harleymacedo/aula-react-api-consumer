@@ -14,24 +14,22 @@ export default class Busca extends Component {
     }
 
     atualizarTexto(event) {
-        console.log(event.target.value)
         this.setState({textoEntrada: event.target.value})
       }
     
     buscar() {
-    let url = 'https://aula-node-api-server.herokuapp.com/api/' + this.state.textoEntrada
-    console.log(url)
-    fetch(url)
-    .then( (resultado) => {
-        console.log(resultado)
-        return resultado.json()
-    })
-    .then( (resultado) => {
-        this.setState({dados: resultado})      
-    })
-    .catch( (error) => {
-        this.setState({dados: 'Valor não encontrado'})
-    })
+        let url = 'https://aula-node-api-server.herokuapp.com/api/'
+        + this.state.textoEntrada
+        fetch(url)
+        .then( (resultado) => {
+            return resultado.json()
+        })
+        .then( (resultado) => {
+            this.setState({dados: resultado})      
+        })
+        .catch( (error) => {
+            this.setState({dados: 'Valor não encontrado'})
+        })
     }
 
     render() {
@@ -41,12 +39,20 @@ export default class Busca extends Component {
                 <h3>Informe o código:</h3>
                 <input type='text' placeholder='Termo' onChange={this.atualizarTexto} />
                 <input type='button' onClick={this.buscar} value='Buscar' />
-                {
-                    this.state.dados.map( (item) => {
-                        return ( <Cartao nome={item.nome} area={item.area} /> )
-                    })
-                }
+                <div style={container}>
+                    
+                    {
+                        this.state.dados.map( (item) => {
+                            return ( <Cartao nome={item.nome} area={item.area} /> )
+                        })
+                    }
+                </div>
             </div>
         )
     }
+}
+
+const container = {
+    display: 'flex',
+    flexDirection: 'row'
 }
